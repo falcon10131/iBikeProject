@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+    //首頁地圖的Fragment
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.mynav.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home">
+    </fragment>
+
+    //ibike官網的Fragment
+    <fragment
+        android:id="@+id/nav_gallery"
+        android:name="com.example.mynav.ui.webview.GalleryFragment"
+        android:label="@string/menu_iBikeWeb"
+        tools:layout="@layout/fragment_gallery" />
+    //站點中心的Fragment
+    <fragment
+        android:id="@+id/nav_slideshow"
+        android:name="com.example.mynav.ui.BikeCeter.BikeCenterFragment"
+        android:label="@string/menu_findBike"
+        tools:layout="@layout/fragment_slideshow" />
+
+</navigation>

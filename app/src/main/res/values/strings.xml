@@ -1,0 +1,33 @@
+<resources>
+    //For Navigation
+    <string name="app_name">iBikeProject</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">凡谷興業cBike</string>
+    <string name="nav_header_subtitle">johnny_jiang@mail.chungyo.net</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    //For NavigationMenu
+    <string name="menu_home">台中市iBike</string>
+    <string name="menu_iBikeWeb">iBike官網</string>
+    <string name="menu_findBike">站點中心</string>
+
+    <string name="title_activity_maps11">Map</string>
+
+    //For RecycleView
+    <string name="position">Position</string>
+    <string name="EName">EName</string>
+    <string name="X">X</string>
+    <string name="Y">Y</string>
+    <string name="CArea">CArea</string>
+    <string name="EArea">EArea</string>
+    <string name="CAddress">CAddress</string>
+    <string name="EAddress">EAddress</string>
+    <string name="AvailableCNT">AvailableCNT</string>
+    <string name="EmpCNT">EmpCNT</string>
+    <string name="UpdateTime">UpdateTime</string>
+
+    //For search
+    <string name="search_hint">search_hint</string>
+
+</resources>

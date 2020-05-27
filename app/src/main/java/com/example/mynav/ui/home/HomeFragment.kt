@@ -56,9 +56,11 @@ class HomeFragment : Fragment()  {
             var availableCNT = jsonArray.getJSONObject(i).getString("AvailableCNT").toString()
             var empCNT = jsonArray.getJSONObject(i).getString("EmpCNT").toString()
             var ll = LatLng(y,x)
+
             googleMap.addMarker(MarkerOptions()
                 .position(ll).title("$position")
                 .snippet("可借數量:$availableCNT , 停車格量:$empCNT"))
+
         }
 
 
@@ -93,6 +95,7 @@ class HomeFragment : Fragment()  {
                     } else {
                         var aaaa = location.latitude.toString()
                         var bbbb = location.longitude.toString()
+
                        println("-------------${location.latitude}------------------")
                         println("-----------${location.longitude}-----------------")
                     }

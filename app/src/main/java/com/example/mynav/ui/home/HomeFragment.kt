@@ -10,6 +10,7 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,18 +18,20 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.example.mynav.R
+import com.example.mynav.ui.getJsonData.GetGSONData
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.android.synthetic.main.fragment_slideshow.*
 import org.json.JSONArray
 import java.lang.Exception
 
 class HomeFragment : Fragment()  {
 
     private val PERMISSION_ID = 42
-    lateinit var mFusedLocationClient: FusedLocationProviderClient
-
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient
+    private lateinit var myMap:GoogleMap
     private val callback = OnMapReadyCallback { googleMap ->
         /**
          * Manipulates the map once available.
@@ -46,34 +49,47 @@ class HomeFragment : Fragment()  {
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(taichung,15f))
 
         var data = resources.openRawResource(R.raw.data)
-        var readdata = data.bufferedReader().use { it.readText() }
-        var jsonArray = JSONArray(readdata)
-
+        var readData = data.bufferedReader().use { it.readText() }
+        var jsonArray = JSONArray(readData)
+        var getGSONData = GetGSONData()
+        //request
+        
+        getGSONData.handleJson()
+        val dataArray = getGSONData.jSonArrayfromGetGSONData
+        //用來為地圖標記
         for (i in 0 until jsonArray.length()) {
-            var x = jsonArray.getJSONObject(i).getString("X").toDouble()
-            var y = jsonArray.getJSONObject(i).getString("Y").toDouble()
-            var position = jsonArray.getJSONObject(i).getString("Position").toString()
-            var availableCNT = jsonArray.getJSONObject(i).getString("AvailableCNT").toString()
-            var empCNT = jsonArray.getJSONObject(i).getString("EmpCNT").toString()
+            var x = dataArray.getJSONObject(i).getString("X").toDouble()
+            var y = dataArray.getJSONObject(i).getString("Y").toDouble()
+            var position = dataArray.getJSONObject(i).getString("Position").toString()
+            var availableCNT = dataArray.getJSONObject(i).getString("AvailableCNT").toString()
+            var empCNT = dataArray.getJSONObject(i).getString("EmpCNT").toString()
             var ll = LatLng(y,x)
-
+            //為標點加上marker同時給予名稱以及數量的資訊
             googleMap.addMarker(MarkerOptions()
                 .position(ll).title("$position")
                 .snippet("可借數量:$availableCNT , 停車格量:$empCNT"))
-
         }
 
-
+//        for (i in 0 until jsonArray.length()) {
+//            var x = jsonArray.getJSONObject(i).getString("X").toDouble()
+//            var y = jsonArray.getJSONObject(i).getString("Y").toDouble()
+//            var position = jsonArray.getJSONObject(i).getString("Position").toString()
+//            var availableCNT = jsonArray.getJSONObject(i).getString("AvailableCNT").toString()
+//            var empCNT = jsonArray.getJSONObject(i).getString("EmpCNT").toString()
+//            var ll = LatLng(y,x)
+//            //為標點加上marker同時給予名稱以及數量的資訊
+//            googleMap.addMarker(MarkerOptions()
+//                .position(ll).title("$position")
+//                .snippet("可借數量:$availableCNT , 停車格量:$empCNT"))
+//        }
         //顯示目前位置的按鈕
         googleMap.uiSettings.isMyLocationButtonEnabled = true
         //可放大縮小的按鈕
         googleMap.uiSettings.isZoomControlsEnabled = true
-        //
-        googleMap.isMyLocationEnabled =true
+        //可提供我的位置
+        //googleMap.isMyLocationEnabled =true
 
         }
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -82,8 +98,8 @@ class HomeFragment : Fragment()  {
     ): View? {
 
         return inflater.inflate(R.layout.fragment_home, container, false)
-
     }
+
     @SuppressLint("MissingPermission")
     private fun getLastLocation() {
         if (checkPermissions()) {
@@ -95,7 +111,6 @@ class HomeFragment : Fragment()  {
                     } else {
                         var aaaa = location.latitude.toString()
                         var bbbb = location.longitude.toString()
-
                        println("-------------${location.latitude}------------------")
                         println("-----------${location.longitude}-----------------")
                     }
@@ -117,7 +132,6 @@ class HomeFragment : Fragment()  {
         mLocationRequest.interval = 0
         mLocationRequest.fastestInterval = 0
         mLocationRequest.numUpdates = 1
-
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         mFusedLocationClient!!.requestLocationUpdates(
             mLocationRequest, mLocationCallback,
@@ -130,11 +144,13 @@ class HomeFragment : Fragment()  {
             var mLastLocation: Location = locationResult.lastLocation
             println("-------------${mLastLocation.latitude.toString()}--------------------------")
             println("-------------${mLastLocation.longitude.toString()}-------------------------***-")
+            Log.d("mLocationCallback","mLocationCallback")
         }
     }
 
     private fun isLocationEnabled(): Boolean {
         var locationManager: LocationManager = context?.getSystemService(LOCATION_SERVICE) as LocationManager
+        Log.d("isLocationEnabled","isLocationEnabled")
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
             LocationManager.NETWORK_PROVIDER
         )
@@ -149,13 +165,10 @@ class HomeFragment : Fragment()  {
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-
-            val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-            activity?.runOnUiThread {
-                mapFragment?.getMapAsync(callback)
-            }
+            Log.d("checkPermissions","True")
             return true
         }
+        Log.d("checkPermissions","False")
         return false
     }
 
@@ -165,6 +178,7 @@ class HomeFragment : Fragment()  {
             arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
             PERMISSION_ID
         )
+        Log.d("requestPermissions","come in")
     }
 
     //檢查權限，如果過就可以使用 getLastLocation()
@@ -173,24 +187,19 @@ class HomeFragment : Fragment()  {
         try {
         if (requestCode == PERMISSION_ID) {
             if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-
                 getLastLocation()
             }
         }
            } catch (e:Exception){
-           Toast.makeText(context,"Permission needed",Toast.LENGTH_SHORT).show()
+           Toast.makeText(context,"You should not pass,cuz u don't give permission",Toast.LENGTH_LONG).show()
        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
-        //mapFragment?.onRequestPermissionsResult(requestCode, permissions, grantResults)
         getLastLocation()
-
     }
 }

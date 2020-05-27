@@ -1,4 +1,4 @@
-package com.example.mynav.ui.BikeCeter
+package com.example.mynav.ui.getJsonData
 
 import com.google.gson.annotations.SerializedName
 

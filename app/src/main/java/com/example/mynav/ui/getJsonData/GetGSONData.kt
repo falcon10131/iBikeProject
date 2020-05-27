@@ -1,4 +1,4 @@
-package com.example.mynav.ui.BikeCeter
+package com.example.mynav.ui.getJsonData
 
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity

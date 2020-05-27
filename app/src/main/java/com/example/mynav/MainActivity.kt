@@ -18,7 +18,7 @@ import androidx.core.app.ActivityCompat
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
-//2020-05-27-17:58
+//2020-05-27-22:30
     private lateinit var appBarConfiguration: AppBarConfiguration
     val PERMISSION_ID = 42
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_slideshow.*
 import org.json.JSONArray
 import java.lang.Exception
+import java.util.concurrent.Executors
 
 class HomeFragment : Fragment()  {
 
@@ -53,21 +54,26 @@ class HomeFragment : Fragment()  {
         var jsonArray = JSONArray(readData)
         var getGSONData = GetGSONData()
         //request
-        
-        getGSONData.handleJson()
-        val dataArray = getGSONData.jSonArrayfromGetGSONData
-        //用來為地圖標記
-        for (i in 0 until jsonArray.length()) {
-            var x = dataArray.getJSONObject(i).getString("X").toDouble()
-            var y = dataArray.getJSONObject(i).getString("Y").toDouble()
-            var position = dataArray.getJSONObject(i).getString("Position").toString()
-            var availableCNT = dataArray.getJSONObject(i).getString("AvailableCNT").toString()
-            var empCNT = dataArray.getJSONObject(i).getString("EmpCNT").toString()
-            var ll = LatLng(y,x)
-            //為標點加上marker同時給予名稱以及數量的資訊
-            googleMap.addMarker(MarkerOptions()
-                .position(ll).title("$position")
-                .snippet("可借數量:$availableCNT , 停車格量:$empCNT"))
+        Executors.newSingleThreadExecutor().execute {
+            getGSONData.handleJson()
+            val dataArray = getGSONData.jSonArrayfromGetGSONData
+            //用來為地圖標記
+                for (i in 0 until jsonArray.length()) {
+                    var x = dataArray.getJSONObject(i).getString("X").toDouble()
+                    var y = dataArray.getJSONObject(i).getString("Y").toDouble()
+                    var position = dataArray.getJSONObject(i).getString("Position").toString()
+                    var availableCNT =
+                        dataArray.getJSONObject(i).getString("AvailableCNT").toString()
+                    var empCNT = dataArray.getJSONObject(i).getString("EmpCNT").toString()
+                    var ll = LatLng(y, x)
+                    //為標點加上marker同時給予名稱以及數量的資訊
+                    googleMap.addMarker(
+                        MarkerOptions()
+                            .position(ll).title("$position")
+                            .snippet("可借數量:$availableCNT , 停車格量:$empCNT")
+                    )
+                }
+
         }
 
 //        for (i in 0 until jsonArray.length()) {

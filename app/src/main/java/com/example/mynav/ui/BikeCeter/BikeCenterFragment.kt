@@ -22,7 +22,7 @@ import java.io.IOException
 class BikeCenterFragment : Fragment(),Callback {
 
     private lateinit var slideshowViewModel: SlideshowViewModel
-//test
+//1.0.1
     //創立CreateView期間不可做事情，但是可以宣告資料型態
     override fun onCreateView(
             inflater: LayoutInflater,

@@ -16,7 +16,6 @@ import java.io.IOException
 
 class GetGSONData  {
     private var client: OkHttpClient = OkHttpClient()
-    var gsonArray:JSONArray = JSONArray()
     var jSonArrayfromGetGSONData = JSONArray()
 
     fun handleJson(){
@@ -30,8 +29,6 @@ class GetGSONData  {
                 @Throws(IOException::class)
                 override fun onResponse(response: Response){
                     val resStr = response.body().string()
-                    //val aa = response.body().
-
                      jSonArrayfromGetGSONData = JSONArray(resStr)
 //                    val jsonData = Gson().fromJson<List<IbikeData>>(resStr, object : TypeToken<List<IbikeData>>() {
 //                    }.type)

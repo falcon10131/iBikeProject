@@ -19,8 +19,6 @@ class Adapter(array:JSONArray): RecyclerView.Adapter<RecyclerView.ViewHolder>() 
     private val listTitle = array
     private val mOnClickListener : View.OnClickListener = View.OnClickListener {  }
 
-
-
     //RecyclerView必備方法之1
     //創立數量隨著listTitle的長度改變
     override fun getItemCount(): Int {
@@ -35,25 +33,20 @@ class Adapter(array:JSONArray): RecyclerView.Adapter<RecyclerView.ViewHolder>() 
         return CustomViewHolder(cellForRow)
     }
 
-
-
     //RecyclerView必備方法之3 - 使用ViewHolder做出你要的東西(可搭配自訂的ViewHolder)
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is CustomViewHolder) {
-            val tt = listTitle
-            Log.d("tt",tt.getString(0))
-            holder.position.text = "${tt.getJSONObject(position).get("Position")}"
-            holder.eName.text = "${tt.getJSONObject(position).get("EName")}"
-            holder.cArea.text = "${tt.getJSONObject(position).get("CArea")}"
-            holder.eArea.text = "${tt.getJSONObject(position).get("EArea")}"
-            holder.cAddress.text = "${tt.getJSONObject(position).get("CAddress")}"
-            holder.availableCNT.text = "可借車輛：${tt.getJSONObject(position).get("AvailableCNT")}"
-            holder.empCNT.text = "可停空位：${tt.getJSONObject(position).get("EmpCNT")}"
+            val index = listTitle.getJSONObject(position)
+            //Log.d("tt",index.getString("Position"))
+            holder.position.text = "${index.get("Position")}"
+            holder.eName.text = "${index.get("EName")}"
+            holder.cArea.text = "${index.get("CArea")}"
+            holder.eArea.text = "${index.get("EArea")}"
+            holder.cAddress.text = "${index.get("CAddress")}"
+            holder.availableCNT.text = "可借車輛：${index.get("AvailableCNT")}"
+            holder.empCNT.text = "可停空位：${index.get("EmpCNT")}"
         }
-       // holder.itemView.setOnClickListener(View.OnClickListener {
-           // Toast.makeText(this@MainActivity,"$position had been click",Toast.LENGTH_SHORT).show()
-        //})
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {

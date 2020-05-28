@@ -15,7 +15,7 @@
     //ibike官網的Fragment
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="com.example.mynav.ui.webview.GalleryFragment"
+        android:name="com.example.mynav.ui.webview.WebViewFragment"
         android:label="@string/menu_iBikeWeb"
         tools:layout="@layout/fragment_gallery" />
     //站點中心的Fragment

@@ -12,9 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mynav.R
 import com.example.mynav.ui.getJsonData.GetGSONData
 import com.squareup.okhttp.Callback
+import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request
 import com.squareup.okhttp.Response
 import kotlinx.android.synthetic.main.fragment_slideshow.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import java.io.IOException
 
@@ -48,32 +53,57 @@ class BikeCenterFragment : Fragment(),Callback {
         var getGSONData = GetGSONData()
         //request
         getGSONData.handleJson()
+
+        CoroutineScope(Dispatchers.IO).launch{
+            okHttpRequest()
+            withContext(Dispatchers.Main){
+                //request
+                val dataArray = getGSONData.jSonArrayfromGetGSONData
+                //var arr = JSONArray(dataArray)
+                rcv.layoutManager = LinearLayoutManager(context)
+                rcv.adapter = Adapter(dataArray)
+            }
+        }
         //Thread.sleep(1000)
         bt_update.setOnClickListener {
             val dataArray = getGSONData.jSonArrayfromGetGSONData
             rcv.layoutManager = LinearLayoutManager(context)
             rcv.adapter = Adapter(dataArray)
-            //Log.d("dataArray",dataArray.toString())
         }
+        //getHttpJsonData()
     }
-//    class test():AsyncTask<Void,Void,String>(){
-//        override fun doInBackground(vararg params: Void?): String {
-//            var getGSONData = GetGSONData()
-//            //request
-//            getGSONData.handleJson()
-//             fun onPreExecute() {
-//                super.onPreExecute()
-//            }
-//             fun onPostExecute(result:String?){
-//                super.onPostExecute(result)
-//            }
-//            //Thread.sleep(1000)
-//
-//
-//                val dataArray = getGSONData.jSonArrayfromGetGSONData
-//        }
-//
-//    }
+
+    private fun okHttpRequest(){
+        var client: OkHttpClient = OkHttpClient()
+        var jSonArrayfromGetGSONData = JSONArray()
+        val request = Request.Builder()
+            .url("http://e-traffic.taichung.gov.tw/DataAPI/api/YoubikeAllAPI")
+            .build()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(request: Request?, e: IOException?) {
+            }
+            @Throws(IOException::class)
+            override fun onResponse(response: Response){
+                val resStr = response.body().string()
+                jSonArrayfromGetGSONData = JSONArray(resStr)
+                Log.d("CoroutineAA",jSonArrayfromGetGSONData[0].toString())
+
+            }
+        })
+    }
+
+    private fun getHttpJsonData(){
+        CoroutineScope(Dispatchers.IO).launch {
+            okHttpRequest()
+            withContext(Dispatchers.Main){
+                var getGSONData = GetGSONData()
+                //request
+                val dataArray = getGSONData.jSonArrayfromGetGSONData
+                rcv.layoutManager = LinearLayoutManager(context)
+                rcv.adapter = Adapter(dataArray)
+            }
+        }
+    }//getHttpJsonData()
 
     inner class BackgroundFetcher : Runnable {
         override fun run() {
@@ -82,7 +112,6 @@ class BikeCenterFragment : Fragment(),Callback {
             rcv.layoutManager = LinearLayoutManager(context)
             rcv.adapter = Adapter(dataArray)
         }
-
     }
     fun getBackHere(callback: (Any)->Unit){
         println("Call Back")
@@ -107,5 +136,6 @@ class BikeCenterFragment : Fragment(),Callback {
         rcv.layoutManager = LinearLayoutManager(context)
         rcv.adapter = Adapter(dataArray)
     }
+
 }
 

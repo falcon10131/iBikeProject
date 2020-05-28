@@ -54,40 +54,39 @@ class HomeFragment : Fragment()  {
         var jsonArray = JSONArray(readData)
         var getGSONData = GetGSONData()
         //request
-        Executors.newSingleThreadExecutor().execute {
-            getGSONData.handleJson()
-            val dataArray = getGSONData.jSonArrayfromGetGSONData
-            //用來為地圖標記
-                for (i in 0 until jsonArray.length()) {
-                    var x = dataArray.getJSONObject(i).getString("X").toDouble()
-                    var y = dataArray.getJSONObject(i).getString("Y").toDouble()
-                    var position = dataArray.getJSONObject(i).getString("Position").toString()
-                    var availableCNT =
-                        dataArray.getJSONObject(i).getString("AvailableCNT").toString()
-                    var empCNT = dataArray.getJSONObject(i).getString("EmpCNT").toString()
-                    var ll = LatLng(y, x)
-                    //為標點加上marker同時給予名稱以及數量的資訊
-                    googleMap.addMarker(
-                        MarkerOptions()
-                            .position(ll).title("$position")
-                            .snippet("可借數量:$availableCNT , 停車格量:$empCNT")
-                    )
-                }
+//        Executors.newSingleThreadExecutor().execute {
+//            getGSONData.handleJson()
+//            val dataArray = getGSONData.jSonArrayfromGetGSONData
+//            //用來為地圖標記
+//                for (i in 0 until jsonArray.length()) {
+//                    var x = dataArray.getJSONObject(i).getString("X").toDouble()
+//                    var y = dataArray.getJSONObject(i).getString("Y").toDouble()
+//                    var position = dataArray.getJSONObject(i).getString("Position").toString()
+//                    var availableCNT =
+//                        dataArray.getJSONObject(i).getString("AvailableCNT").toString()
+//                    var empCNT = dataArray.getJSONObject(i).getString("EmpCNT").toString()
+//                    var ll = LatLng(y, x)
+//                    //為標點加上marker同時給予名稱以及數量的資訊
+//                    googleMap.addMarker(
+//                        MarkerOptions()
+//                            .position(ll).title("$position")
+//                            .snippet("可借數量:$availableCNT , 停車格量:$empCNT")
+//                    )
+//                }
+//        }//.execute
 
+        for (i in 0 until jsonArray.length()) {
+            var x = jsonArray.getJSONObject(i).getString("X").toDouble()
+            var y = jsonArray.getJSONObject(i).getString("Y").toDouble()
+            var position = jsonArray.getJSONObject(i).getString("Position").toString()
+            var availableCNT = jsonArray.getJSONObject(i).getString("AvailableCNT").toString()
+            var empCNT = jsonArray.getJSONObject(i).getString("EmpCNT").toString()
+            var ll = LatLng(y,x)
+            //為標點加上marker同時給予名稱以及數量的資訊
+            googleMap.addMarker(MarkerOptions()
+                .position(ll).title("$position")
+                .snippet("可借數量:$availableCNT , 停車格量:$empCNT"))
         }
-
-//        for (i in 0 until jsonArray.length()) {
-//            var x = jsonArray.getJSONObject(i).getString("X").toDouble()
-//            var y = jsonArray.getJSONObject(i).getString("Y").toDouble()
-//            var position = jsonArray.getJSONObject(i).getString("Position").toString()
-//            var availableCNT = jsonArray.getJSONObject(i).getString("AvailableCNT").toString()
-//            var empCNT = jsonArray.getJSONObject(i).getString("EmpCNT").toString()
-//            var ll = LatLng(y,x)
-//            //為標點加上marker同時給予名稱以及數量的資訊
-//            googleMap.addMarker(MarkerOptions()
-//                .position(ll).title("$position")
-//                .snippet("可借數量:$availableCNT , 停車格量:$empCNT"))
-//        }
         //顯示目前位置的按鈕
         googleMap.uiSettings.isMyLocationButtonEnabled = true
         //可放大縮小的按鈕

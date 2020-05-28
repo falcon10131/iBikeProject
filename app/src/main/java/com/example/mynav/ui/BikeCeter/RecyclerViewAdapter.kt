@@ -15,14 +15,14 @@ import com.example.mynav.R
 import org.json.JSONArray
 
 //--------------------------------------以下放入RecyclerView.ViewHolder原因在可能會有多個ViewHolder，因此可整個我全都要
-class Adapter(array:JSONArray): RecyclerView.Adapter<RecyclerView.ViewHolder>() ,AdapterView.OnItemClickListener{
+class Adapter(array:JSONArray?): RecyclerView.Adapter<RecyclerView.ViewHolder>() ,AdapterView.OnItemClickListener{
     private val listTitle = array
     private val mOnClickListener : View.OnClickListener = View.OnClickListener {  }
 
     //RecyclerView必備方法之1
     //創立數量隨著listTitle的長度改變
     override fun getItemCount(): Int {
-        return listTitle.length()
+            return listTitle?.length() ?: 0
     }
     //RecyclerView必備方法之2 - 建立ViewHolder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -37,15 +37,15 @@ class Adapter(array:JSONArray): RecyclerView.Adapter<RecyclerView.ViewHolder>() 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is CustomViewHolder) {
-            val index = listTitle.getJSONObject(position)
+            val index = listTitle?.getJSONObject(position)
             //Log.d("tt",index.getString("Position"))
-            holder.position.text = "${index.get("Position")}"
-            holder.eName.text = "${index.get("EName")}"
-            holder.cArea.text = "${index.get("CArea")}"
-            holder.eArea.text = "${index.get("EArea")}"
-            holder.cAddress.text = "${index.get("CAddress")}"
-            holder.availableCNT.text = "可借車輛：${index.get("AvailableCNT")}"
-            holder.empCNT.text = "可停空位：${index.get("EmpCNT")}"
+            holder.position.text = "${index?.get("Position")}"
+            holder.eName.text = "${index?.get("EName")}"
+            holder.cArea.text = "${index?.get("CArea")}"
+            holder.eArea.text = "${index?.get("EArea")}"
+            holder.cAddress.text = "${index?.get("CAddress")}"
+            holder.availableCNT.text = "可借車輛：${index?.get("AvailableCNT")}"
+            holder.empCNT.text = "可停空位：${index?.get("EmpCNT")}"
         }
     }
 

@@ -52,7 +52,7 @@ class HomeFragment : Fragment()  {
         var data = resources.openRawResource(R.raw.data)
         var readData = data.bufferedReader().use { it.readText() }
         var jsonArray = JSONArray(readData)
-        var getGSONData = GetGSONData()
+        //var getGSONData = GetGSONData()
         //request
 //        Executors.newSingleThreadExecutor().execute {
 //            getGSONData.handleJson()

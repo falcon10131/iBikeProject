@@ -23,8 +23,8 @@ import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import java.io.IOException
 
-class BikeCenterFragment : Fragment(),Callback {
-
+class BikeCenterFragment : Fragment() {
+    private var dataArray:JSONArray? = null
     private lateinit var bikeCenterViewModel: BikeCenterViewModel
 //1.0.11111555
     //創立CreateView期間不可做事情，但是可以宣告資料型態
@@ -36,12 +36,17 @@ class BikeCenterFragment : Fragment(),Callback {
         bikeCenterViewModel =
                 ViewModelProviders.of(this).get(BikeCenterViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_slideshow, container, false)
-        //val textView: TextView = root.findViewById(R.id.text_slideshow)
         bikeCenterViewModel.text.observe(viewLifecycleOwner, Observer {
         })
-        Thread(BackgroundFetcher()).start()
+        //Thread(BackgroundFetcher()).start()
+        okHttpRequest()
         return root
     }
+    private fun setRecyclerView(){
+        rcv.layoutManager = LinearLayoutManager(context)
+        rcv.adapter = Adapter(dataArray)
+    }
+
     //在View創立後要做的事情(可使用物件做事)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,9 +64,8 @@ class BikeCenterFragment : Fragment(),Callback {
             withContext(Dispatchers.Main){
                 //request
                 val dataArray = getGSONData.jSonArrayfromGetGSONData
-                //var arr = JSONArray(dataArray)
-                rcv.layoutManager = LinearLayoutManager(context)
-                rcv.adapter = Adapter(dataArray)
+
+                //setRCV()
             }
         }
         //Thread.sleep(1000)
@@ -72,24 +76,32 @@ class BikeCenterFragment : Fragment(),Callback {
         }
         //getHttpJsonData()
     }
-
+    private fun asdasd(dataArray:JSONArray){
+        rcv.layoutManager = LinearLayoutManager(context)
+        rcv.adapter = Adapter(dataArray)
+    }
     private fun okHttpRequest(){
-        var client: OkHttpClient = OkHttpClient()
-        var jSonArrayfromGetGSONData = JSONArray()
-        val request = Request.Builder()
-            .url("http://e-traffic.taichung.gov.tw/DataAPI/api/YoubikeAllAPI")
-            .build()
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(request: Request?, e: IOException?) {
-            }
-            @Throws(IOException::class)
-            override fun onResponse(response: Response){
-                val resStr = response.body().string()
-                jSonArrayfromGetGSONData = JSONArray(resStr)
-                Log.d("CoroutineAA",jSonArrayfromGetGSONData[0].toString())
 
-            }
-        })
+            var client: OkHttpClient = OkHttpClient()
+            var jSonArrayFromGetGSONData = JSONArray()
+            val request = Request.Builder()
+                .url("http://e-traffic.taichung.gov.tw/DataAPI/api/YoubikeAllAPI")
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(request: Request?, e: IOException?) {
+                }
+                @Throws(IOException::class)
+                override fun onResponse(response: Response){
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val resStr = response.body().string()
+                        dataArray = JSONArray(resStr)
+                        jSonArrayFromGetGSONData = JSONArray(resStr)
+                        Log.d("CoroutineAA", jSonArrayFromGetGSONData[0].toString())
+                        withContext(Dispatchers.Main){ rcv.adapter = Adapter(jSonArrayFromGetGSONData)}
+                    }
+                }
+            })
     }
 
     private fun getHttpJsonData(){
@@ -104,7 +116,7 @@ class BikeCenterFragment : Fragment(),Callback {
             }
         }
     }//getHttpJsonData()
-
+/*
     inner class BackgroundFetcher : Runnable {
         override fun run() {
             var getGSONData = GetGSONData()
@@ -113,29 +125,7 @@ class BikeCenterFragment : Fragment(),Callback {
             rcv.adapter = Adapter(dataArray)
         }
     }
-    fun getBackHere(callback: (Any)->Unit){
-        println("Call Back")
-    }
-
-    override fun onFailure(request: Request?, e: IOException?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onResponse(response: Response?) {
-
-        var getGSONData = GetGSONData()
-        //request
-        getGSONData.handleJson()
-        getBackHere(){
-            Log.d("Call","asdasdasd")
-        }
-        //Thread.sleep(1000)
-
-        val dataArray = getGSONData.jSonArrayfromGetGSONData
-        //var arr = JSONArray(dataArray)
-        rcv.layoutManager = LinearLayoutManager(context)
-        rcv.adapter = Adapter(dataArray)
-    }
+    */
 
 }
 

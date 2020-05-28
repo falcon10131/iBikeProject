@@ -19,9 +19,11 @@ import kotlinx.android.synthetic.main.nav_header_main.*
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
-//2020-05-28-18:05
+    /*
+    //2020-05-28-22:56 off Home
+    */
     private lateinit var appBarConfiguration: AppBarConfiguration
-    val PERMISSION_ID = 42
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -39,9 +41,6 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-//        imageView.setOnClickListener {
-//
-//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -54,8 +53,6 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
-
-
 }
 
 

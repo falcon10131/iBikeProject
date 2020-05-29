@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mynav.IOnItemClickListener
 import com.example.mynav.MainActivity
 import com.example.mynav.R
+import com.example.mynav.ui.getJsonData.IbikeData
 import kotlinx.android.synthetic.main.recycleview_rowstyle.view.*
 import org.json.JSONArray
 import kotlin.coroutines.coroutineContext
@@ -48,6 +49,7 @@ class Adapter(array:JSONArray?): RecyclerView.Adapter<Adapter.CustomViewHolder>(
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
             val index = listTitle?.getJSONObject(position)
             //Log.d("tt",index.getString("Position"))
+            //holder.bindto(index?.get("$"))
             holder.position.text = "${index?.get("Position")}"
             holder.eName.text = "${index?.get("EName")}"
             holder.cArea.text = "${index?.get("CArea")}"
@@ -63,13 +65,22 @@ class Adapter(array:JSONArray?): RecyclerView.Adapter<Adapter.CustomViewHolder>(
         holder.itemView.setOnClickListener {
 //            val inflater: LayoutInflater
 //            val view = inflater.inflate(R.layout.fragment_login, container, false)
-//            Log.d("click2", "${holder.position.text}")
+            Log.d("click2", "${holder.position.text}")
 
         }
     }
 
     //自訂的ViewHolder
-    inner class CustomViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+    class CustomViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+        fun bindto(IbikeData: IbikeData){
+            position.text = IbikeData.position
+            eName.text = IbikeData.eName
+            cArea.text = IbikeData.cArea
+            eArea.text = IbikeData.eArea
+            cAddress.text = IbikeData.cAddress
+            availableCNT.text = IbikeData.availableCNT
+            empCNT.text = IbikeData.empCNT
+        }
         val position: TextView = v.findViewById<TextView>(R.id.textView_Position)
         val eName: TextView = v.findViewById<TextView>(R.id.textView_EName)
         val cArea: TextView = v.findViewById<TextView>(R.id.textView_CArea)

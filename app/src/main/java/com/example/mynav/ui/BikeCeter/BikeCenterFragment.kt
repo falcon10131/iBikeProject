@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -39,6 +40,9 @@ class BikeCenterFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_slideshow, container, false)
         bikeCenterViewModel.text.observe(viewLifecycleOwner, Observer {
         })
+//        rcv.setOnClickListener {
+//            it.isVisible
+//        }
         //okHttpRequest()
         return root
     }

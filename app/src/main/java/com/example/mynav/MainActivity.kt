@@ -20,7 +20,7 @@ import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
     /*
-    //2020-05-28-22:56 off Home
+    //2020-05-28-10:15
     */
     private lateinit var appBarConfiguration: AppBarConfiguration
 

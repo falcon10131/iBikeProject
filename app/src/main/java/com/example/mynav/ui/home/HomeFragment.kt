@@ -24,6 +24,10 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_slideshow.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import java.lang.Exception
 import java.util.concurrent.Executors
@@ -54,10 +58,12 @@ class HomeFragment : Fragment()  {
         var jsonArray = JSONArray(readData)
         //var getGSONData = GetGSONData()
         //request
-//        Executors.newSingleThreadExecutor().execute {
+        CoroutineScope(Dispatchers.IO).launch{
+
 //            getGSONData.handleJson()
 //            val dataArray = getGSONData.jSonArrayfromGetGSONData
 //            //用來為地圖標記
+//            withContext(Dispatchers.Main){
 //                for (i in 0 until jsonArray.length()) {
 //                    var x = dataArray.getJSONObject(i).getString("X").toDouble()
 //                    var y = dataArray.getJSONObject(i).getString("Y").toDouble()
@@ -73,7 +79,10 @@ class HomeFragment : Fragment()  {
 //                            .snippet("可借數量:$availableCNT , 停車格量:$empCNT")
 //                    )
 //                }
-//        }//.execute
+//            }
+        }
+
+
 
         for (i in 0 until jsonArray.length()) {
             var x = jsonArray.getJSONObject(i).getString("X").toDouble()

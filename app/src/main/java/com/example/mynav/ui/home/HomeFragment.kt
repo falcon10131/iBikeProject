@@ -29,14 +29,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
+import java.io.InputStream
 import java.lang.Exception
 import java.util.concurrent.Executors
 
 class HomeFragment : Fragment()  {
-
-    private val PERMISSION_ID = 42
+    companion object{
+        private val PERMISSION_ID = 42
+    }
+    private var whereIClickX:String = ""
+    private var whereIClickY:String = ""
+    private lateinit var mMap:GoogleMap
+    private lateinit var jsonArray: JSONArray
+    private lateinit var readData: String
+    private lateinit var data: InputStream
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
-    private lateinit var myMap:GoogleMap
+
     private val callback = OnMapReadyCallback { googleMap ->
         /**
          * Manipulates the map once available.
@@ -48,14 +56,12 @@ class HomeFragment : Fragment()  {
          */
         val taichung = LatLng(24.163736, 120.637631)
         //在變數taichung裡面加入marker並且將中心點設其地點
-
         googleMap.addMarker(MarkerOptions().position(taichung).title("Marker in Taichung11"))
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(taichung))
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(taichung,15f))
-
-        var data = resources.openRawResource(R.raw.data)
-        var readData = data.bufferedReader().use { it.readText() }
-        var jsonArray = JSONArray(readData)
+        data = resources.openRawResource(R.raw.data)
+        readData = data.bufferedReader().use { it.readText() }
+        jsonArray = JSONArray(readData)
         //var getGSONData = GetGSONData()
         //request
         CoroutineScope(Dispatchers.IO).launch{
@@ -81,8 +87,6 @@ class HomeFragment : Fragment()  {
 //                }
 //            }
         }
-
-
 
         for (i in 0 until jsonArray.length()) {
             var x = jsonArray.getJSONObject(i).getString("X").toDouble()
@@ -110,8 +114,25 @@ class HomeFragment : Fragment()  {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         return inflater.inflate(R.layout.fragment_home, container, false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        var x = whereIClickX
+        var y = whereIClickY
+        if (whereIClickX.isNotEmpty() && whereIClickY.isNotEmpty()) {
+            var ll = LatLng(y.toDouble(),x.toDouble())
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ll,15f))
+            Toast.makeText(context,"Here We GO",Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+    fun takeMeToSomeWhereIClick(x: String, y: String){
+        Log.d("take","$x  ,  $y")
+        whereIClickX = x
+        whereIClickY = y
     }
 
     @SuppressLint("MissingPermission")
@@ -161,6 +182,8 @@ class HomeFragment : Fragment()  {
             Log.d("mLocationCallback","mLocationCallback")
         }
     }
+
+
 
     private fun isLocationEnabled(): Boolean {
         var locationManager: LocationManager = context?.getSystemService(LOCATION_SERVICE) as LocationManager

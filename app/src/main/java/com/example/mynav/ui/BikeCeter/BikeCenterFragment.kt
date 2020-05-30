@@ -81,7 +81,6 @@ class BikeCenterFragment : Fragment() {
 //                            setRecyclerView()
 //                            rcv.adapter = Adapter(jSonArrayFromGetGSONData)
 //                        }
-                        //Log.d("CoroutineAA", "dataArray"))
                         withContext(Dispatchers.Main){
                             setRecyclerView()
                             rcv.adapter = Adapter(dataArray)

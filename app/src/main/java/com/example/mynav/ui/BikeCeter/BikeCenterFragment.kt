@@ -40,10 +40,8 @@ class BikeCenterFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_slideshow, container, false)
         bikeCenterViewModel.text.observe(viewLifecycleOwner, Observer {
         })
-//        rcv.setOnClickListener {
-//            it.isVisible
-//        }
-        //okHttpRequest()
+        val inToHomeFragment = inflater.inflate(R.layout.fragment_home,container,false)
+
         return root
     }
 

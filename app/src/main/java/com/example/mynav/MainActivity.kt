@@ -3,6 +3,7 @@ package com.example.mynav
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.transition.TransitionManager
 import android.view.Menu
 import android.widget.Toast
 import com.google.android.material.navigation.NavigationView
@@ -15,12 +16,15 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.fragment.app.FragmentManager
+import com.example.mynav.ui.home.HomeFragment
 import kotlinx.android.synthetic.main.nav_header_main.*
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
     /*
-    //2020-05-30-22:04
+    //2020-05-31-15:56
     */
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -41,6 +45,14 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        val mag = supportFragmentManager
+        val tra = mag.beginTransaction()
+        tra.replace(R.id.nav_host_fragment_container,HomeFragment())
+            .commit()
+    }
+
+    fun repla(){
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -53,6 +65,15 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+    fun getnotifi(title: String, text: String){
+        val notificationManager = NotificationCompat.Builder(this,"Click")
+           //.setSmallIcon(R.drawable.avatar1)
+            .setContentTitle("$title")
+            .setContentText("$text")
+            .build()
+    }
+
 }
 
 

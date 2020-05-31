@@ -124,10 +124,9 @@ class HomeFragment : Fragment()  {
         if (whereIClickX.isNotEmpty() && whereIClickY.isNotEmpty()) {
             var ll = LatLng(y.toDouble(),x.toDouble())
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ll,15f))
-            Toast.makeText(context,"Here We GO",Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,"Here We GO $ll",Toast.LENGTH_SHORT).show()
         }
     }
-
 
     fun takeMeToSomeWhereIClick(x: String, y: String){
         Log.d("take","$x  ,  $y")

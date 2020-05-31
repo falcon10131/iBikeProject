@@ -75,7 +75,7 @@ class Adapter(array:JSONArray?): RecyclerView.Adapter<Adapter.CustomViewHolder>(
 //              val view = inflater.inflate(R.layout.fragment_login, container, false)
                 Log.d("click2", "${holder.position.text}")
                 HomeFragment().takeMeToSomeWhereIClick("$x","$y")
-                val q = Inflater()
+                MainActivity().repla()
             }
     }
 

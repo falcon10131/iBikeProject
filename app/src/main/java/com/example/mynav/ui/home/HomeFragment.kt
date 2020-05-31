@@ -36,6 +36,9 @@ import java.util.concurrent.Executors
 class HomeFragment : Fragment()  {
     companion object{
         private val PERMISSION_ID = 42
+        val instance : HomeFragment by lazy {
+            HomeFragment()
+        }
     }
     private var whereIClickX:String = ""
     private var whereIClickY:String = ""

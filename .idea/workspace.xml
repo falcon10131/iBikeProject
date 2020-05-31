@@ -23,13 +23,10 @@
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/mynav/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/mynav/MainActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/mynav/ui/BikeCeter/BikeCenterFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/mynav/ui/BikeCeter/BikeCenterFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/mynav/ui/BikeCeter/RecyclerViewAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/mynav/ui/BikeCeter/RecyclerViewAdapter.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/mynav/ui/home/HomeFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/mynav/ui/home/HomeFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/mynav/ui/webview/WebViewFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/mynav/ui/webview/WebViewFragment.kt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -37,7 +34,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_3a_API_28_n9.0" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="Nexus_5X_API_29_x86" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -76,7 +73,7 @@
     <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-05-29T11:37:15.900Z" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/KotlinSchedule-master/KotlinSchedule-master" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -256,19 +253,19 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-function">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/mynav/ui/home/HomeFragment.kt</url>
-          <line>137</line>
+          <line>140</line>
           <properties class="com.example.mynav.ui.home.HomeFragment" method="getLastLocation" />
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-function">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/mynav/ui/home/HomeFragment.kt</url>
-          <line>162</line>
+          <line>165</line>
           <properties class="com.example.mynav.ui.home.HomeFragment" method="requestNewLocationData" />
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-function">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/mynav/ui/home/HomeFragment.kt</url>
-          <line>182</line>
+          <line>185</line>
           <properties>
             <option name="EMULATED" value="true" />
           </properties>
@@ -276,31 +273,31 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-function">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/mynav/ui/home/HomeFragment.kt</url>
-          <line>193</line>
+          <line>196</line>
           <properties class="com.example.mynav.ui.home.HomeFragment" method="checkPermissions" />
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-function">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/mynav/ui/home/HomeFragment.kt</url>
-          <line>210</line>
+          <line>213</line>
           <properties class="com.example.mynav.ui.home.HomeFragment" method="requestPermissions" />
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-function">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/mynav/ui/home/HomeFragment.kt</url>
-          <line>220</line>
+          <line>223</line>
           <properties class="com.example.mynav.ui.home.HomeFragment" method="onRequestPermissionsResult" />
           <option name="timeStamp" value="12" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-function">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/mynav/ui/home/HomeFragment.kt</url>
-          <line>233</line>
+          <line>236</line>
           <properties class="com.example.mynav.ui.home.HomeFragment" method="onViewCreated" />
           <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-field">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/mynav/ui/home/HomeFragment.kt</url>
-          <line>175</line>
+          <line>178</line>
           <properties myFieldName="mLocationCallback" myClassName="com.example.mynav.ui.home.HomeFragment" />
           <option name="timeStamp" value="8" />
         </line-breakpoint>
@@ -313,11 +310,6 @@
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/mynav/MainActivity.kt</url>
           <line>46</line>
           <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/mynav/MainActivity.kt</url>
-          <line>65</line>
-          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

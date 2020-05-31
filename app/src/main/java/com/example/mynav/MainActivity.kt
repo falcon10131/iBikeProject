@@ -24,7 +24,7 @@ import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
     /*
-    //2020-05-31-15:56
+    //2020-05-31-23:22
     */
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -47,12 +47,15 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
         val mag = supportFragmentManager
         val tra = mag.beginTransaction()
-        tra.replace(R.id.nav_host_fragment_container,HomeFragment())
-            .commit()
+
     }
 
     fun repla(){
+        supportFragmentManager.beginTransaction().apply {
 
+            replace(R.id.nav_host_fragment,HomeFragment.instance)
+            commit()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -60,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
-
+    //都側邊抽屜被打開時觸發此fun
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()

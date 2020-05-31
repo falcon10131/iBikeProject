@@ -26,6 +26,12 @@ import org.json.JSONArray
 import java.io.IOException
 
 class BikeCenterFragment : Fragment() {
+    companion object{
+        val instance : BikeCenterFragment by lazy {
+            BikeCenterFragment()
+        }
+    }
+
     private var dataArray:JSONArray? = null
     private lateinit var bikeCenterViewModel: BikeCenterViewModel
 

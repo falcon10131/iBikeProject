@@ -51,6 +51,7 @@ class BikeCenterFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_slideshow, container, false)
         bikeCenterViewModel.text.observe(viewLifecycleOwner, Observer {
         })
+
         val inToHomeFragment = inflater.inflate(R.layout.fragment_home,container,false)
         Log.d("TAG:Fragment","bike = ${BikeCenterFragment.instance.id}")
         return root
@@ -65,13 +66,9 @@ class BikeCenterFragment : Fragment() {
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.nav_host_fragment,MapFragment.instance).commit()
         }
+        setRecyclerView()
     }
-    fun replace2(){
-        requireActivity().supportFragmentManager.beginTransaction().apply {
-            replace(R.id.nav_host_fragment, MapFragment.instance)
-            commit()
-        }
-    }
+
     //用來設定recyclerView的adapter
     fun setRecyclerView(){
         val getGSONData = GetGSONData()
@@ -100,8 +97,7 @@ class BikeCenterFragment : Fragment() {
 //                            rcv.adapter = Adapter(jSonArrayFromGetGSONData)
 //                        }
                         withContext(Dispatchers.Main){
-                            setRecyclerView()
-
+                           // setRecyclerView()
                             rcv.adapter = Adapter(dataArray,this@BikeCenterFragment)
                         }
                     }

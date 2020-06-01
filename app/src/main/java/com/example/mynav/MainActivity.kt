@@ -4,35 +4,50 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.NotificationCompat
 import androidx.core.view.GravityCompat
+import androidx.core.view.MenuItemCompat
 import androidx.core.view.get
 import com.example.mynav.ui.BikeCeter.BikeCenterFragment
 import com.example.mynav.ui.map.MapFragment
 import com.example.mynav.ui.webview.WebViewFragment
+import com.squareup.okhttp.Callback
+import com.squareup.okhttp.OkHttpClient
+import com.squareup.okhttp.Request
+import com.squareup.okhttp.Response
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONArray
+import java.io.IOException
 
 class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelectedListener{
     /*
-    //2020-06-01-
+    //2020-06-01-17:53
     */
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var dataArray:JSONArray
+    private lateinit var array:MutableList<String>
     val fragmentManager = supportFragmentManager
+    lateinit var adapter:ArrayAdapter<String>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+//        okHttpRequest()
         /*
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -51,11 +66,14 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
         navigationView.setNavigationItemSelectedListener{
         }
         */
+//        val listView:ListView = findViewById(R.id.listView)
+//        adapter = ArrayAdapter(this@MainActivity,android.R.layout.simple_list_item_1,array)
+//        listView.adapter = adapter
         toggle()
         initActivity()
     }
 
-    fun toggle(){
+    private fun toggle(){
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
@@ -103,6 +121,7 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
+
     //都側邊抽屜被打開時觸發此fun
 //    override fun onSupportNavigateUp(): Boolean {
 //        val navController = findNavController(R.id.nav_host_fragment)
@@ -135,6 +154,7 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
+
 }
 
 

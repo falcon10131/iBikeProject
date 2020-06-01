@@ -59,8 +59,6 @@ class Adapter(array:JSONArray,val fg:Fragment): RecyclerView.Adapter<Adapter.Cus
                 Log.d("click2", "${holder.position.text}")
                 fg.requireActivity().supportFragmentManager.beginTransaction()
                     .replace(R.id.nav_host_fragment,MapFragment.instance).commit()
-
-
                 MapFragment.instance.takeMeToSomeWhereIClicked("$x","$y")
                 Log.d("TAG:Fragment","adapter = ${MapFragment.instance.id}")
             }

@@ -12,13 +12,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ListView
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.mynav.R
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_main.*
@@ -29,7 +33,7 @@ import org.json.JSONArray
 import java.io.InputStream
 import java.lang.Exception
 
-class MapFragment : Fragment()  {
+class MapFragment : Fragment(), SearchView.OnQueryTextListener  {
     companion object{
         private val PERMISSION_ID = 42
         val instance : MapFragment by lazy {
@@ -57,13 +61,15 @@ class MapFragment : Fragment()  {
         val taichung = LatLng(24.163736, 120.637631)
         //在變數taichung裡面加入marker並且將中心點設其地點
         googleMap.addMarker(MarkerOptions().position(taichung).title("Marker in Taichung11"))
+
         if (whereIClickX.isNotEmpty() && whereIClickY.isNotEmpty()) {
             var x = whereIClickX
             var y = whereIClickY
             var ll = LatLng(y.toDouble(),x.toDouble())
-            //googleMap.moveCamera(CameraUpdateFactory.newLatLng(ll))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(ll))
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ll,16f))
-            Toast.makeText(context,"Here We GO $ll",Toast.LENGTH_SHORT).show()
+
+            Toast.makeText(context,"Going to $ll",Toast.LENGTH_SHORT).show()
         } else {
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(taichung))
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(taichung, 16f))
@@ -107,6 +113,7 @@ class MapFragment : Fragment()  {
             var ll = LatLng(y,x)
             //為標點加上marker同時給予名稱以及數量的資訊
             googleMap.addMarker(MarkerOptions()
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.bike32x32))
                 .position(ll).title("$position")
                 .snippet("可借數量:$availableCNT , 停車格量:$empCNT"))
         }
@@ -124,6 +131,7 @@ class MapFragment : Fragment()  {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -245,5 +253,13 @@ class MapFragment : Fragment()  {
         super.onCreate(savedInstanceState)
         Log.d("TAG:Fragment","Map = ${instance.id}")
         myLocation = true
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        TODO("Not yet implemented")
     }
 }

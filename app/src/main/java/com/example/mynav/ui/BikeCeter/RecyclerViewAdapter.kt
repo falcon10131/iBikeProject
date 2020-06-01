@@ -1,42 +1,28 @@
 package com.example.mynav.ui.BikeCeter
 
 import android.annotation.SuppressLint
-import android.app.NotificationManager
-import android.content.Context
-import android.content.Intent
-import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.app.BundleCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mynav.IOnItemClickListener
 import com.example.mynav.MainActivity
 import com.example.mynav.R
-import com.example.mynav.ui.getJsonData.IbikeData
-import com.example.mynav.ui.home.HomeFragment
-import kotlinx.android.synthetic.main.recycleview_rowstyle.view.*
+import com.example.mynav.ui.map.MapFragment
 import org.json.JSONArray
-import java.util.zip.Inflater
-import kotlin.coroutines.coroutineContext
 
-//--------------------------------------以下放入RecyclerView.ViewHolder原因在可能會有多個ViewHolder，因此可整個我全都要
-class Adapter(array:JSONArray?): RecyclerView.Adapter<Adapter.CustomViewHolder>() {
-
+//--------------------------------------以下如果放入RecyclerView.ViewHolder原因在可能會有多個ViewHolder，因此可整個我全都要
+class Adapter(array:JSONArray,val fg:Fragment): RecyclerView.Adapter<Adapter.CustomViewHolder>() {
 
     private val listTitle = array
     private val mOnClickListener: View.OnClickListener = View.OnClickListener { }
     //RecyclerView必備方法之1
     //創立數量隨著listTitle的長度改變
     override fun getItemCount(): Int {
-        return listTitle?.length() ?: 0
+        return listTitle.length() ?: 0
     }
 
     //RecyclerView必備方法之2 - 建立ViewHolder
@@ -49,33 +35,34 @@ class Adapter(array:JSONArray?): RecyclerView.Adapter<Adapter.CustomViewHolder>(
         cellForRow.setOnClickListener {
                 Log.d("click3", " + asclickasclickasda")
         }
-
         return CustomViewHolder(cellForRow)
     }
 
     //RecyclerView必備方法之3 - 使用ViewHolder做出你要的東西(可搭配自訂的ViewHolder)
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
-            val index = listTitle?.getJSONObject(position)
-            val x = index?.get("X")
-            val y = index?.get("Y")
+            val index = listTitle.getJSONObject(position)
+            val x = index.get("X")
+            val y = index.get("Y")
             //var bd = Bundle().putString("")
-            //Log.d("tt",index.getString("Position"))
-            //holder.bindto(index?.get("$"))
-            holder.position.text = "${index?.get("Position")}"
-            holder.eName.text = "${index?.get("EName")}"
-            holder.cArea.text = "${index?.get("CArea")}"
-            holder.eArea.text = "${index?.get("EArea")}"
-            holder.cAddress.text = "${index?.get("CAddress")}"
-            holder.availableCNT.text = "可借車輛：${index?.get("AvailableCNT")}"
-            holder.empCNT.text = "可停空位：${index?.get("EmpCNT")}"
+            holder.position.text = "${index.get("Position")}"
+            holder.eName.text = "${index.get("EName")}"
+            holder.cArea.text = "${index.get("CArea")}"
+            holder.eArea.text = "${index.get("EArea")}"
+            holder.cAddress.text = "${index.get("CAddress")}"
+            holder.availableCNT.text = "可借車輛：${index.get("AvailableCNT")}"
+            holder.empCNT.text = "可停空位：${index.get("EmpCNT")}"
 
             holder.itemView.setOnClickListener {
 //              val inflater: LayoutInflater
 //              val view = inflater.inflate(R.layout.fragment_login, container, false)
                 Log.d("click2", "${holder.position.text}")
-                HomeFragment().takeMeToSomeWhereIClick("$x","$y")
-                MainActivity().repla()
+                fg.requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.nav_host_fragment,MapFragment.instance).commit()
+
+
+                MapFragment.instance.takeMeToSomeWhereIClicked("$x","$y")
+                Log.d("TAG:Fragment","adapter = ${MapFragment.instance.id}")
             }
     }
 
@@ -90,5 +77,6 @@ class Adapter(array:JSONArray?): RecyclerView.Adapter<Adapter.CustomViewHolder>(
         val empCNT: TextView = v.findViewById<TextView>(R.id.textView_EmpCNT)
         val image = v.findViewById<ImageView>(R.id.imageView3)
     }
+
 
 }

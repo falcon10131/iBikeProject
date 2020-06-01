@@ -1,15 +1,13 @@
-package com.example.mynav.ui.home
+package com.example.mynav.ui.map
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context.LOCATION_SERVICE
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
-import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,32 +15,31 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import com.example.mynav.R
-import com.example.mynav.ui.getJsonData.GetGSONData
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.fragment_slideshow.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import java.io.InputStream
 import java.lang.Exception
-import java.util.concurrent.Executors
 
-class HomeFragment : Fragment()  {
+class MapFragment : Fragment()  {
     companion object{
         private val PERMISSION_ID = 42
-        val instance : HomeFragment by lazy {
-            HomeFragment()
+        val instance : MapFragment by lazy {
+            MapFragment()
         }
     }
     private var whereIClickX:String = ""
     private var whereIClickY:String = ""
-    private lateinit var mMap:GoogleMap
+    private var myLocation : Boolean = false
+    private var mMap: GoogleMap? = null
     private lateinit var jsonArray: JSONArray
     private lateinit var readData: String
     private lateinit var data: InputStream
@@ -60,35 +57,45 @@ class HomeFragment : Fragment()  {
         val taichung = LatLng(24.163736, 120.637631)
         //在變數taichung裡面加入marker並且將中心點設其地點
         googleMap.addMarker(MarkerOptions().position(taichung).title("Marker in Taichung11"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(taichung))
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(taichung,15f))
+        if (whereIClickX.isNotEmpty() && whereIClickY.isNotEmpty()) {
+            var x = whereIClickX
+            var y = whereIClickY
+            var ll = LatLng(y.toDouble(),x.toDouble())
+            //googleMap.moveCamera(CameraUpdateFactory.newLatLng(ll))
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ll,16f))
+            Toast.makeText(context,"Here We GO $ll",Toast.LENGTH_SHORT).show()
+        } else {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(taichung))
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(taichung, 16f))
+        }
         data = resources.openRawResource(R.raw.data)
         readData = data.bufferedReader().use { it.readText() }
         jsonArray = JSONArray(readData)
         //var getGSONData = GetGSONData()
         //request
         CoroutineScope(Dispatchers.IO).launch{
-
-//            getGSONData.handleJson()
-//            val dataArray = getGSONData.jSonArrayfromGetGSONData
-//            //用來為地圖標記
-//            withContext(Dispatchers.Main){
-//                for (i in 0 until jsonArray.length()) {
-//                    var x = dataArray.getJSONObject(i).getString("X").toDouble()
-//                    var y = dataArray.getJSONObject(i).getString("Y").toDouble()
-//                    var position = dataArray.getJSONObject(i).getString("Position").toString()
-//                    var availableCNT =
-//                        dataArray.getJSONObject(i).getString("AvailableCNT").toString()
-//                    var empCNT = dataArray.getJSONObject(i).getString("EmpCNT").toString()
-//                    var ll = LatLng(y, x)
-//                    //為標點加上marker同時給予名稱以及數量的資訊
-//                    googleMap.addMarker(
-//                        MarkerOptions()
-//                            .position(ll).title("$position")
-//                            .snippet("可借數量:$availableCNT , 停車格量:$empCNT")
-//                    )
-//                }
-//            }
+/*
+            getGSONData.handleJson()
+            val dataArray = getGSONData.jSonArrayfromGetGSONData
+            //用來為地圖標記
+            withContext(Dispatchers.Main){
+                for (i in 0 until jsonArray.length()) {
+                    var x = dataArray.getJSONObject(i).getString("X").toDouble()
+                    var y = dataArray.getJSONObject(i).getString("Y").toDouble()
+                    var position = dataArray.getJSONObject(i).getString("Position").toString()
+                    var availableCNT =
+                        dataArray.getJSONObject(i).getString("AvailableCNT").toString()
+                    var empCNT = dataArray.getJSONObject(i).getString("EmpCNT").toString()
+                    var ll = LatLng(y, x)
+                    //為標點加上marker同時給予名稱以及數量的資訊
+                    googleMap.addMarker(
+                        MarkerOptions()
+                            .position(ll).title("$position")
+                            .snippet("可借數量:$availableCNT , 停車格量:$empCNT")
+                    )
+                }
+            }
+            */
         }
 
         for (i in 0 until jsonArray.length()) {
@@ -120,18 +127,9 @@ class HomeFragment : Fragment()  {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    override fun onResume() {
-        super.onResume()
-        var x = whereIClickX
-        var y = whereIClickY
-        if (whereIClickX.isNotEmpty() && whereIClickY.isNotEmpty()) {
-            var ll = LatLng(y.toDouble(),x.toDouble())
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ll,15f))
-            Toast.makeText(context,"Here We GO $ll",Toast.LENGTH_SHORT).show()
-        }
-    }
 
-    fun takeMeToSomeWhereIClick(x: String, y: String){
+
+    fun takeMeToSomeWhereIClicked(x: String, y: String){
         Log.d("take","$x  ,  $y")
         whereIClickX = x
         whereIClickY = y
@@ -154,8 +152,8 @@ class HomeFragment : Fragment()  {
                 }
             } else {
                 Toast.makeText(context, "Turn on location", Toast.LENGTH_LONG).show()
-                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                startActivity(intent)
+//                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+//                startActivity(intent)
             }
         } else {
             requestPermissions()
@@ -205,6 +203,7 @@ class HomeFragment : Fragment()  {
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             Log.d("checkPermissions","True")
+            myLocation = true
             return true
         }
         Log.d("checkPermissions","False")
@@ -240,5 +239,11 @@ class HomeFragment : Fragment()  {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
         getLastLocation()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.d("TAG:Fragment","Map = ${instance.id}")
+        myLocation = true
     }
 }

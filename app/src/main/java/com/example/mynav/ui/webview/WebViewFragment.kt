@@ -12,7 +12,11 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.mynav.R
 
 class WebViewFragment : Fragment() {
-
+    companion object{
+        val instance : WebViewFragment by lazy {
+            WebViewFragment()
+        }
+    }
     private lateinit var webViewViewModel: WebViewViewModel
 
     @SuppressLint("SetJavaScriptEnabled")

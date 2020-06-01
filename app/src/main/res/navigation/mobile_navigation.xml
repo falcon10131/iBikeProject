@@ -7,7 +7,7 @@
     //首頁地圖的Fragment
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.mynav.ui.home.HomeFragment"
+        android:name="com.example.mynav.ui.map.MapFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home">
     </fragment>
@@ -23,6 +23,8 @@
         android:id="@+id/nav_slideshow"
         android:name="com.example.mynav.ui.BikeCeter.BikeCenterFragment"
         android:label="@string/menu_findBike"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_slideshow" >
+
+    </fragment>
 
 </navigation>

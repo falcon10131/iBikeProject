@@ -9,14 +9,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mynav.MainActivity
 import com.example.mynav.R
 import com.example.mynav.ui.map.MapFragment
 import org.json.JSONArray
 
 //--------------------------------------以下如果放入RecyclerView.ViewHolder原因在可能會有多個ViewHolder，因此可整個我全都要
-class Adapter(array:JSONArray,val fg:Fragment): RecyclerView.Adapter<Adapter.CustomViewHolder>() {
-
+class Adapter(array:JSONArray, val fg:Fragment, arrayForEName:List<String>): RecyclerView.Adapter<Adapter.CustomViewHolder>() {
+    private val arrayEName = arrayForEName
     private val listTitle = array
     private val mOnClickListener: View.OnClickListener = View.OnClickListener { }
     //RecyclerView必備方法之1
@@ -29,7 +28,7 @@ class Adapter(array:JSONArray,val fg:Fragment): RecyclerView.Adapter<Adapter.Cus
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
         //val layoutInflater = LayoutInflater.from(parent?.context)
         //以下是cellForRow這個變數可以參照R.layout.recycleview_rowstyle的XML樣板
-        val cellForRow = LayoutInflater.from(parent.context)
+        val cellForRow = LayoutInflater.from(fg.requireContext())
             .inflate(R.layout.recycleview_rowstyle, parent, false)
         //parent.setOnClickListener(mOnClickListener)
         cellForRow.setOnClickListener {
@@ -46,13 +45,12 @@ class Adapter(array:JSONArray,val fg:Fragment): RecyclerView.Adapter<Adapter.Cus
             val y = index.get("Y")
             //var bd = Bundle().putString("")
             holder.position.text = "${index.get("Position")}"
-            holder.eName.text = "${index.get("EName")}"
+            holder.eName.text = arrayEName.get(position)
             holder.cArea.text = "${index.get("CArea")}"
             holder.eArea.text = "${index.get("EArea")}"
             holder.cAddress.text = "${index.get("CAddress")}"
             holder.availableCNT.text = "可借車輛：${index.get("AvailableCNT")}"
             holder.empCNT.text = "可停空位：${index.get("EmpCNT")}"
-
             holder.itemView.setOnClickListener {
 //              val inflater: LayoutInflater
 //              val view = inflater.inflate(R.layout.fragment_login, container, false)

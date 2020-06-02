@@ -1,20 +1,15 @@
 package com.example.mynav.ui.BikeCeter
 
-import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.*
 import android.widget.Toast
-import androidx.core.view.isVisible
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.mynav.R
 import com.example.mynav.ui.getJsonData.GetGSONData
 import com.example.mynav.ui.map.MapFragment
@@ -36,10 +31,10 @@ class BikeCenterFragment : Fragment() {
             BikeCenterFragment()
         }
     }
-    var testt = 5
     private lateinit var dataArray:JSONArray
+    private lateinit var dataArrayForEName:MutableList<String>
     private lateinit var bikeCenterViewModel: BikeCenterViewModel
-
+    private var displayList:MutableList<String> = ArrayList()
     //創立CreateView期間不可做事情，但是可以宣告資料型態
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -51,7 +46,6 @@ class BikeCenterFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_slideshow, container, false)
         bikeCenterViewModel.text.observe(viewLifecycleOwner, Observer {
         })
-
         val inToHomeFragment = inflater.inflate(R.layout.fragment_home,container,false)
         Log.d("TAG:Fragment","bike = ${BikeCenterFragment.instance.id}")
         return root
@@ -66,20 +60,17 @@ class BikeCenterFragment : Fragment() {
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.nav_host_fragment,MapFragment.instance).commit()
         }
+        setHasOptionsMenu(true)
         setRecyclerView()
     }
 
     //用來設定recyclerView的adapter
     fun setRecyclerView(){
-        val getGSONData = GetGSONData()
-        val dataArray = getGSONData.jSonArrayfromGetGSONData
-        rcv.layoutManager = LinearLayoutManager(context)
-        rcv.adapter = Adapter(dataArray,this@BikeCenterFragment)
+        rcv.layoutManager = LinearLayoutManager(this.requireContext())
     }
     //okHttp的連線需求
     private fun okHttpRequest(){
         var client: OkHttpClient = OkHttpClient()
-        var jSonArrayFromGetGSONData = JSONArray()
         val request = Request.Builder()
             .url("http://e-traffic.taichung.gov.tw/DataAPI/api/YoubikeAllAPI")
             .build()
@@ -92,13 +83,21 @@ class BikeCenterFragment : Fragment() {
                     CoroutineScope(Dispatchers.IO).launch {
                         val resStr = response.body().string()
                         dataArray = JSONArray(resStr)
-//                        getActivity()?.runOnUiThread{
-//                            setRecyclerView()
-//                            rcv.adapter = Adapter(jSonArrayFromGetGSONData)
-//                        }
+                        dataArrayForEName = ArrayList()
+                        for (i in 0 until dataArray.length()){
+                            dataArrayForEName.add(dataArray.getJSONObject(i).get("EName").toString())
+                        }
+                        displayList.addAll(dataArrayForEName)
+                        Log.d("ename","$dataArrayForEName")
+                        /*
+                        getActivity()?.runOnUiThread{
+                            setRecyclerView()
+                            rcv.adapter = Adapter(jSonArrayFromGetGSONData)
+                        }
+                        */
                         withContext(Dispatchers.Main){
-                           // setRecyclerView()
-                            rcv.adapter = Adapter(dataArray,this@BikeCenterFragment)
+                            setRecyclerView()
+                            rcv.adapter = Adapter(dataArray,this@BikeCenterFragment,dataArrayForEName)
                         }
                     }
                 }
@@ -107,9 +106,45 @@ class BikeCenterFragment : Fragment() {
 
     //    inner class Adapter(array:JSONArray,val fg:Fragment): RecyclerView.Adapter<Adapter.CustomViewHolder>() {
 //
-    override fun onResume() {
-        super.onResume()
-        Log.d("back","${testt}")
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.main,menu)
+        val searchItem = menu.findItem(R.id.action_search)
+        if (searchItem != null){
+            val searchView = searchItem.actionView as SearchView
+            searchView.queryHint = "Fragment.."
+            searchView.setBackgroundColor(Color.RED)
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    Toast.makeText(context,"See",Toast.LENGTH_SHORT).show()
+                    return true
+                }
+                override fun onQueryTextChange(newText: String): Boolean {
+                    displayList.clear()
+                    if (newText.isNotEmpty()) {
+                        val search = newText.toLowerCase()
+                        /*
+                        for (i in 0 until dataArrayForEName.size){
+                            if (dataArrayForEName[i].toString().toLowerCase().contains(search)){
+                                displayList.add(dataArrayForEName.get(i).toString().toLowerCase().contains(search).toString())
+                            }
+                        }
+                        */
+                        dataArrayForEName.forEach {
+                            if (it.toLowerCase().contains(search)) {
+                                displayList.add(it)
+                            }
+                        }
+                    } else {
+                        displayList.addAll(dataArrayForEName)
+                    }
+                    rcv.adapter = Adapter(dataArray,this@BikeCenterFragment,dataArrayForEName)
+                    rcv.adapter?.notifyDataSetChanged()
+
+                    return true
+                }
+            })
+            }
     }
 //        private val listTitle = array
 //        private val mOnClickListener: View.OnClickListener = View.OnClickListener { }

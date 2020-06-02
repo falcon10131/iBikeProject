@@ -9,9 +9,7 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -123,15 +121,51 @@ class MapFragment : Fragment(), SearchView.OnQueryTextListener  {
         googleMap.uiSettings.isZoomControlsEnabled = true
         //可提供我的位置
         //googleMap.isMyLocationEnabled =true
-
         }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.main,menu)
+        val searchItem = menu.findItem(R.id.action_search)
+        if (searchItem != null){
+            val searchView = searchItem.actionView as SearchView
+            searchView.queryHint = "Search.."
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    searchView.suggestionsAdapter
+//                    if (query == displayList[0]) {
+//                    }
+//                    Toast.makeText(this@MainActivity,"Searching...$query",Toast.LENGTH_SHORT).show()
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    /*
+                    displayList.clear()
+                    if (newText.isNullOrEmpty()) {
+                        val search = newText
+                        displayList.forEach{
+                            if (it.contains(search)) {
+                                displayList.add(it)
+                            }
+                        }
+                    } else {
+                        displayList.addAll(array)
+                    }
+                    */
+                    //adapter.filter.filter(newText)
+                    return true
+                }
+            })
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        //setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 

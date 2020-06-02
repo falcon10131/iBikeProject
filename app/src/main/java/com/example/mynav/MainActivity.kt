@@ -19,21 +19,28 @@ import androidx.core.app.NotificationCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
 import androidx.core.view.get
+import com.example.mynav.ui.BikeCeter.Adapter
 import com.example.mynav.ui.BikeCeter.BikeCenterFragment
 import com.example.mynav.ui.map.MapFragment
 import com.example.mynav.ui.webview.WebViewFragment
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.squareup.okhttp.Callback
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request
 import com.squareup.okhttp.Response
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.fragment_slideshow.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import java.io.IOException
+import java.net.URL
 
 class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelectedListener{
     /*
@@ -41,13 +48,25 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
     */
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var dataArray:JSONArray
-    private lateinit var array:MutableList<String>
+    private var array:List<String> = ArrayList()
+    private lateinit var iBike : iBikeModelItem
+    var displayList:MutableList<String> = ArrayList()
     val fragmentManager = supportFragmentManager
     lateinit var adapter:ArrayAdapter<String>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//        okHttpRequest()
+/*
+        CoroutineScope(Dispatchers.IO).launch {
+            val json = URL("http://e-traffic.taichung.gov.tw/DataAPI/api/YoubikeAllAPI")
+                .readText()
+            iBike = Gson().fromJson(json,
+                object : TypeToken<iBikeModelItem>() {}.type)
+            array = listOf(iBike.toString())
+        }//launch
+*/
+        okHttpRequest()
+
         /*
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -72,6 +91,29 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
         toggle()
         initActivity()
     }
+    private fun okHttpRequest(){
+        var client: OkHttpClient = OkHttpClient()
+        var jSonArrayFromGetGSONData = JSONArray()
+        val request = Request.Builder()
+            .url("http://e-traffic.taichung.gov.tw/DataAPI/api/YoubikeAllAPI")
+            .build()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(request: Request?, e: IOException?) {
+            }
+            @Throws(IOException::class)
+            override fun onResponse(response: Response){
+                CoroutineScope(Dispatchers.IO).launch {
+                    val resStr = response.body().string()
+                    dataArray = JSONArray(resStr)
+                    for (i in 0 until dataArray.length()){
+                        displayList.add(dataArray.getJSONObject(i).get("Position").toString())
+                    }
+                    Log.d("arr","$displayList")
+                }
+            }
+        })
+    }
+
 
     private fun toggle(){
         val toggle = ActionBarDrawerToggle(
@@ -109,24 +151,53 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
         }
     }
 
-    fun replace(){
-        this.fragmentManager.beginTransaction().apply {
-            replace(R.id.nav_host_fragment, MapFragment.instance)
-            commit()
-        }
-    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
+        //menuInflater.inflate(R.menu.main, menu)
+        val searchItem = menu.findItem(R.id.action_search)
+        if (searchItem != null){
+            val searchView = searchItem.actionView as SearchView
+            searchView.queryHint = "Search.."
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    searchView.suggestionsAdapter
+                   if (query == displayList[0]) {
+
+                   }
+                    Toast.makeText(this@MainActivity,"Searching...$query",Toast.LENGTH_SHORT).show()
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    displayList.clear()
+                    if (newText.isNotEmpty()) {
+                        val search = newText.toLowerCase()
+                        array.forEach{
+                            if (it.toLowerCase().contains(search)) {
+                                displayList.add(it)
+                            }
+                        }
+                    } else {
+                        displayList.addAll(array)
+                    }
+                    rcv.adapter?.notifyDataSetChanged()
+                    return true
+                }
+            })
+        }
         return true
     }
+
+
 
     //都側邊抽屜被打開時觸發此fun
 //    override fun onSupportNavigateUp(): Boolean {
 //        val navController = findNavController(R.id.nav_host_fragment)
 //        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
 //    }
+
+
 
     fun getnotifi(title: String, text: String){
         val notificationManager = NotificationCompat.Builder(this,"Click")
